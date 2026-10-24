@@ -1,5 +1,6 @@
 package com.example.uolcoursecatalogue;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -12,7 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CourseAdapter.OnItemClickListener {
+
+    public static final String EXTRA_CODE = "extra_code";
+    public static final String EXTRA_TITLE = "extra_title";
+    public static final String EXTRA_INSTRUCTOR = "extra_instructor";
+    public static final String EXTRA_EMAIL = "extra_email";
+    public static final String EXTRA_DESCRIPTION = "extra_description";
+    public static final String EXTRA_CREDITS = "extra_credits";
 
     private RecyclerView rvCourses;
     private ArrayList<Course> courses;
@@ -57,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
                 "Designing and building web applications with HTML, CSS, JavaScript and back-end basics.", 3));
 
         rvCourses.setLayoutManager(new LinearLayoutManager(this));
-        rvCourses.setAdapter(new CourseAdapter(courses));
+        rvCourses.setAdapter(new CourseAdapter(courses, this));
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Course course = courses.get(position);
+
+        Intent intent = new Intent(MainActivity.this, CourseDetailActivity.class);
+        intent.putExtra(EXTRA_CODE, course.getCode());
+        intent.putExtra(EXTRA_TITLE, course.getTitle());
+        intent.putExtra(EXTRA_INSTRUCTOR, course.getInstructor());
+        intent.putExtra(EXTRA_EMAIL, course.getEmail());
+        intent.putExtra(EXTRA_DESCRIPTION, course.getDescription());
+        intent.putExtra(EXTRA_CREDITS, course.getCreditHours());
+        startActivity(intent);
     }
 }
